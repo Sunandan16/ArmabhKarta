@@ -21,6 +21,11 @@ interface AnalysisResult {
   recommended_skills?: string[];
   current_skills?: string[];
   roadmap?: string[];
+  llm?: {
+    summary?: string;
+    key_insights?: string[];
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -266,6 +271,31 @@ export function Demo() {
                   </ul>
                 </div>
               )}
+
+              {result.llm?.summary && (
+                <div className="rounded-xl border border-primary-light bg-white p-6">
+                  <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                    Summary
+                  </h3>
+                  <p className="leading-relaxed text-gray-700">
+                    {result.llm.summary}
+                  </p>
+                </div>
+              )}
+
+              {Array.isArray(result.llm?.key_insights) &&
+                result.llm.key_insights.length > 0 && (
+                  <div className="rounded-xl border border-primary-light bg-white p-6">
+                    <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                      Key insights
+                    </h3>
+                    <ul className="list-inside list-disc space-y-1 text-gray-700">
+                      {result.llm.key_insights.map((insight, i) => (
+                        <li key={i}>{insight}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
             </div>
           )}
         </div>
