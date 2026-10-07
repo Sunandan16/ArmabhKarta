@@ -15,7 +15,7 @@ export function IntelligenceMetric({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-brand-border bg-white/80 p-4 shadow-warm-sm backdrop-blur-sm',
+        'rounded-2xl border border-brand-border bg-[var(--panel-bg)] p-4 shadow-warm-sm backdrop-blur-sm',
         className
       )}
     >

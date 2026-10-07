@@ -170,19 +170,19 @@ export function Demo() {
             <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
               Live Demo
             </span>
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+            <h2 className="mb-4 text-3xl font-bold text-brand-navy md:text-4xl">
               Try SkillPilot
             </h2>
-            <p className="mb-8 text-muted">
+            <p className="mb-8 text-brand-muted">
               Enter your background or upload your resume, choose a target role,
               and see your skill gap analysis.
             </p>
-            <div className="space-y-4 rounded-3xl border border-primary-light bg-white p-6 shadow-card">
+            <div className="space-y-4 rounded-3xl border border-primary-light bg-[var(--panel-bg)] p-6 shadow-card">
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                   1
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-brand-muted">
                   Type your background or upload a resume
                 </p>
               </div>
@@ -190,7 +190,7 @@ export function Demo() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                   2
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-brand-muted">
                   Pick your target data role
                 </p>
               </div>
@@ -198,7 +198,7 @@ export function Demo() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                   3
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-brand-muted">
                   Get predictions, insights, and a learning roadmap
                 </p>
               </div>
@@ -207,7 +207,7 @@ export function Demo() {
 
           {/* Right form */}
           <div className="lg:col-span-3">
-            <div className="rounded-3xl border border-primary-light bg-white p-6 shadow-xl shadow-orange-100 md:p-8">
+            <div className="rounded-3xl border border-primary-light bg-[var(--panel-bg)] p-6 shadow-xl shadow-orange-100 md:p-8">
               {/* Mode toggle */}
               <div className="mb-6 flex justify-center gap-2">
                 <button
@@ -216,7 +216,7 @@ export function Demo() {
                   className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
                     mode === 'text'
                       ? 'bg-primary text-white shadow-md'
-                      : 'bg-surface text-gray-700 hover:bg-primary-light'
+                      : 'bg-surface text-brand-muted hover:bg-primary-light'
                   }`}
                 >
                   Type Background
@@ -227,7 +227,7 @@ export function Demo() {
                   className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
                     mode === 'resume'
                       ? 'bg-primary text-white shadow-md'
-                      : 'bg-surface text-gray-700 hover:bg-primary-light'
+                      : 'bg-surface text-brand-muted hover:bg-primary-light'
                   }`}
                 >
                   Upload Resume
@@ -239,7 +239,7 @@ export function Demo() {
                   <div>
                     <label
                       htmlFor="background"
-                      className="mb-2 block text-sm font-semibold text-gray-900"
+                      className="mb-2 block text-sm font-semibold text-brand-navy"
                     >
                       Describe your background
                     </label>
@@ -250,14 +250,14 @@ export function Demo() {
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                       placeholder="e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau."
-                      className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+                      className="w-full resize-none rounded-2xl border border-[var(--panel-border)] bg-[var(--input-bg)] px-4 py-3 text-brand-navy placeholder:text-brand-muted/60 transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
                     />
                   </div>
                 ) : (
                   <div>
                     <label
                       htmlFor="resume"
-                      className="mb-2 block text-sm font-semibold text-gray-900"
+                      className="mb-2 block text-sm font-semibold text-brand-navy"
                     >
                       Upload your resume (PDF)
                     </label>
@@ -267,7 +267,7 @@ export function Demo() {
                       accept=".pdf"
                       required={mode === 'resume'}
                       onChange={(e) => setFile(e.target.files?.[0] || null)}
-                      className="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 file:mr-4 file:rounded-xl file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-hover"
+                      className="block w-full rounded-2xl border border-[var(--panel-border)] bg-[var(--input-bg)] px-4 py-3 text-sm text-brand-navy file:mr-4 file:rounded-xl file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-hover"
                     />
                   </div>
                 )}
@@ -275,7 +275,7 @@ export function Demo() {
                 <div>
                   <label
                     htmlFor="role"
-                    className="mb-2 block text-sm font-semibold text-gray-900"
+                    className="mb-2 block text-sm font-semibold text-brand-navy"
                   >
                     Target role
                   </label>
@@ -284,7 +284,7 @@ export function Demo() {
                     required
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+                    className="w-full rounded-2xl border border-[var(--panel-border)] bg-[var(--input-bg)] px-4 py-3 text-brand-navy transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
                   >
                     {roles.map((r) => (
                       <option key={r.value} value={r.value}>
@@ -340,7 +340,7 @@ export function Demo() {
                           key={card.key}
                           className="rounded-2xl border border-primary-light bg-surface p-5"
                         >
-                          <p className="mb-2 text-sm font-medium text-muted">
+                          <p className="mb-2 text-sm font-medium text-brand-muted">
                             {card.label}
                           </p>
                           {isBadge ? (
@@ -356,11 +356,11 @@ export function Demo() {
                             </span>
                           ) : (
                             <div>
-                              <p className="mb-2 text-2xl font-bold text-gray-900">
+                              <p className="mb-2 text-2xl font-bold text-brand-navy">
                                 {formatValue(value, card.format)}
                               </p>
                               {isPercentage && (
-                                <div className="h-2 w-full overflow-hidden rounded-full bg-white">
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--panel-bg)]">
                                   <div
                                     className={`h-full rounded-full ${card.color}`}
                                     style={{
@@ -377,12 +377,12 @@ export function Demo() {
                   </div>
 
                   {result.llm?.summary && (
-                    <div className="rounded-2xl border border-primary-light bg-white p-6">
-                      <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <div className="rounded-2xl border border-primary-light bg-[var(--panel-bg)] p-6">
+                      <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-brand-navy">
                         <Lightbulb className="h-5 w-5 text-primary" />
                         Summary
                       </h3>
-                      <p className="leading-relaxed text-gray-700">
+                      <p className="leading-relaxed text-brand-muted">
                         {result.llm.summary}
                       </p>
                     </div>
@@ -390,11 +390,11 @@ export function Demo() {
 
                   {Array.isArray(result.llm?.key_insights) &&
                     result.llm.key_insights.length > 0 && (
-                      <div className="rounded-2xl border border-primary-light bg-white p-6">
-                        <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                      <div className="rounded-2xl border border-primary-light bg-[var(--panel-bg)] p-6">
+                        <h3 className="mb-3 text-lg font-semibold text-brand-navy">
                           Key insights
                         </h3>
-                        <ul className="list-inside list-disc space-y-1 text-gray-700">
+                        <ul className="list-inside list-disc space-y-1 text-brand-muted">
                           {result.llm.key_insights.map((insight, i) => (
                             <li key={i}>{insight}</li>
                           ))}
@@ -404,8 +404,8 @@ export function Demo() {
 
                   {Array.isArray(result.recommended_skills) &&
                     result.recommended_skills.length > 0 && (
-                      <div className="rounded-2xl border border-primary-light bg-white p-6">
-                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                      <div className="rounded-2xl border border-primary-light bg-[var(--panel-bg)] p-6">
+                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-brand-navy">
                           <CheckCircle2 className="h-5 w-5 text-primary" />
                           Recommended skills
                         </h3>
@@ -423,8 +423,8 @@ export function Demo() {
                     )}
 
                   {Array.isArray(result.roadmap) && result.roadmap.length > 0 && (
-                    <div className="rounded-2xl border border-primary-light bg-white p-6">
-                      <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <div className="rounded-2xl border border-primary-light bg-[var(--panel-bg)] p-6">
+                      <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-brand-navy">
                         <CheckCircle2 className="h-5 w-5 text-primary" />
                         Your roadmap
                       </h3>
@@ -432,7 +432,7 @@ export function Demo() {
                         {result.roadmap.map((step, i) => (
                           <li
                             key={i}
-                            className="flex items-start gap-3 text-gray-700"
+                            className="flex items-start gap-3 text-brand-muted"
                           >
                             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                               {i + 1}
@@ -445,8 +445,8 @@ export function Demo() {
                   )}
 
                   {userId && apiBase && (
-                    <div className="rounded-2xl border-2 border-primary-light bg-white p-6">
-                      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+                    <div className="rounded-2xl border-2 border-primary-light bg-[var(--panel-bg)] p-6">
+                      <h3 className="mb-4 text-lg font-semibold text-brand-navy">
                         Your learning dashboard
                       </h3>
                       <UserDashboard userId={userId} apiBase={apiBase} />

@@ -41,7 +41,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 h-[72px] w-full border-b border-brand-border bg-white/80 backdrop-blur-md transition-colors duration-300">
+    <header className="sticky top-0 z-50 h-[72px] w-full border-b border-brand-border bg-[var(--panel-bg)] backdrop-blur-md transition-colors duration-300">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 md:px-8">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-warm-sm">
@@ -76,7 +76,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-brand-border bg-white px-4 py-4 lg:hidden">
+        <div className="border-t border-brand-border bg-[var(--panel-bg)] px-4 py-4 lg:hidden">
           <nav className="flex flex-col gap-3">
             {navItems.map((item) => (
               <NavLink

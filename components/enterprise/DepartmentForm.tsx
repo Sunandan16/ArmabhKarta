@@ -56,20 +56,20 @@ export function DepartmentForm({
   }
 
   return (
-    <div className="rounded-3xl border border-primary-light bg-white p-6 shadow-card md:p-8">
+    <div className="rounded-3xl border border-primary-light bg-[var(--panel-bg)] p-6 shadow-card md:p-8">
       <div className="mb-6 flex items-center gap-3">
         <div className="inline-flex rounded-2xl bg-surface p-3 text-primary">
           <Building2 className="h-6 w-6" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Department setup</h2>
-          <p className="text-sm text-muted">Create a department for workforce planning.</p>
+          <h2 className="text-xl font-bold text-brand-navy">Department setup</h2>
+          <p className="text-sm text-brand-muted">Create a department for workforce planning.</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="mb-2 block text-sm font-semibold text-gray-900">
+          <label className="mb-2 block text-sm font-semibold text-brand-navy">
             Department name
           </label>
           <input
@@ -78,19 +78,19 @@ export function DepartmentForm({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. AI Team"
-            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-brand-navy transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-900">
+          <label className="mb-2 block text-sm font-semibold text-brand-navy">
             Target role
           </label>
           <select
             required
             value={targetRole}
             onChange={(e) => setTargetRole(e.target.value)}
-            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-brand-navy transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
           >
             {ROLES.map((r) => (
               <option key={r.value} value={r.value}>
@@ -101,7 +101,7 @@ export function DepartmentForm({
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-900">
+          <label className="mb-2 block text-sm font-semibold text-brand-navy">
             Budget (LPA)
           </label>
           <input
@@ -112,12 +112,12 @@ export function DepartmentForm({
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
             placeholder="50"
-            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-brand-navy transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
           />
         </div>
 
         <div className="sm:col-span-2">
-          <label className="mb-2 block text-sm font-semibold text-gray-900">
+          <label className="mb-2 block text-sm font-semibold text-brand-navy">
             Time horizon (months)
           </label>
           <input
@@ -126,7 +126,7 @@ export function DepartmentForm({
             min={1}
             value={horizon}
             onChange={(e) => setHorizon(e.target.value)}
-            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+            className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-brand-navy transition focus:border-primary focus:bg-[var(--panel-bg)] focus:outline-none focus:ring-2 focus:ring-primary-light"
           />
         </div>
 

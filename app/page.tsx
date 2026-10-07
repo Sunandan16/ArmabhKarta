@@ -16,7 +16,7 @@ export default function LandingPage() {
   const [mode, setMode] = useState<'employee' | 'company'>('employee');
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-white">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--background)]">
       {/* Hero */}
       <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-12 lg:grid-cols-[1fr_1fr] lg:pt-20">
         <motion.div

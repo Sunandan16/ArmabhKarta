@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ArrowRight, CheckCircle2, Lightbulb } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2, Lightbulb, Upload } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/GlassPanel';
 import { IntelligenceMetric } from '@/components/shared/IntelligenceMetric';
+import { UserDashboard } from '@/components/UserDashboard';
 import { ROLES } from '@/components/enterprise/types';
 
 interface AnalysisResult {
@@ -24,14 +25,15 @@ interface AnalysisResult {
 }
 
 export function EmployeeWorkspace() {
+  const [mode, setMode] = useState<'text' | 'resume'>('text');
   const [form, setForm] = useState({
     targetRole: 'data_scientist',
     skills: 'Python, SQL, machine learning',
     experience: '2',
-    education: 'BTech',
-    budget: '5000',
     time: '12',
   });
+  const [file, setFile] = useState<File | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +44,7 @@ export function EmployeeWorkspace() {
     setAnalyzing(true);
     setResult(null);
     setError(null);
+    setUserId(null);
 
     if (!apiBase) {
       setAnalyzing(false);
@@ -49,23 +52,53 @@ export function EmployeeWorkspace() {
       return;
     }
 
-    const text = `I am a ${form.education} with ${form.experience} years of experience. My skills include ${form.skills}.`;
-
     try {
-      const res = await fetch(`${apiBase}/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: JSON.stringify({ text, role: form.targetRole }),
-      });
+      let data: AnalysisResult & { user_id?: string };
+      const headers: Record<string, string> = {
+        'ngrok-skip-browser-warning': 'true',
+      };
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(data.detail || `Server returned ${res.status}`);
+      if (mode === 'resume') {
+        if (!file) {
+          setAnalyzing(false);
+          setError('Please upload a PDF resume.');
+          return;
+        }
+        const uploadForm = new FormData();
+        uploadForm.append('file', file);
+        uploadForm.append('role', form.targetRole);
+        const res = await fetch(`${apiBase}/upload-resume`, {
+          method: 'POST',
+          headers,
+          body: uploadForm,
+        });
+        const uploadData = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(uploadData.detail || `Server returned ${res.status}`);
+        }
+        data = uploadData.analysis;
+        if (uploadData.user_id) {
+          setUserId(uploadData.user_id);
+          localStorage.setItem('skillpilot_user_id', uploadData.user_id);
+        }
+      } else {
+        const text = `I have ${form.experience} years of experience. My skills include ${form.skills}.`;
+        const res = await fetch(`${apiBase}/analyze`, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text, role: form.targetRole }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(json.detail || `Server returned ${res.status}`);
+        }
+        data = json;
       }
-      setResult(data as AnalysisResult);
+
+      setResult(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Analysis failed');
     } finally {
@@ -73,14 +106,46 @@ export function EmployeeWorkspace() {
     }
   }
 
+  const canSubmit =
+    mode === 'text'
+      ? form.skills.trim()
+      : !!file;
+
   return (
     <div className="grid gap-8 lg:grid-cols-[420px_1fr]">
       <GlassPanel className="self-start space-y-6">
         <div>
           <h2 className="text-xl font-bold text-brand-navy">Career Profiler</h2>
           <p className="text-sm text-brand-muted">
-            Input your background to discover the highest-value path.
+            Input your background or upload your resume to discover the
+            highest-value path.
           </p>
+        </div>
+
+        {/* Mode toggle */}
+        <div className="flex rounded-full border border-brand-border bg-[var(--input-bg)] p-1">
+          <button
+            type="button"
+            onClick={() => setMode('text')}
+            className={`flex-1 rounded-full py-2.5 text-sm font-semibold transition ${
+              mode === 'text'
+                ? 'bg-primary text-white shadow-warm-sm'
+                : 'text-brand-muted hover:text-brand-navy'
+            }`}
+          >
+            Type Background
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('resume')}
+            className={`flex-1 rounded-full py-2.5 text-sm font-semibold transition ${
+              mode === 'resume'
+                ? 'bg-primary text-white shadow-warm-sm'
+                : 'text-brand-muted hover:text-brand-navy'
+            }`}
+          >
+            Upload Resume
+          </button>
         </div>
 
         <div className="space-y-4">
@@ -100,78 +165,78 @@ export function EmployeeWorkspace() {
               ))}
             </select>
           </div>
-          <div>
-            <label className="mb-1 block text-xs font-semibold text-brand-navy">
-              Current skills (comma separated)
-            </label>
-            <input
-              value={form.skills}
-              onChange={(e) => setForm({ ...form, skills: e.target.value })}
-              className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {mode === 'text' ? (
+            <>
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-brand-navy">
+                  Current skills (comma separated)
+                </label>
+                <input
+                  value={form.skills}
+                  onChange={(e) => setForm({ ...form, skills: e.target.value })}
+                  className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-brand-navy">
+                    Experience (years)
+                  </label>
+                  <input
+                    type="number"
+                    value={form.experience}
+                    onChange={(e) => setForm({ ...form, experience: e.target.value })}
+                    className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-brand-navy">
+                    Time (months)
+                  </label>
+                  <input
+                    type="number"
+                    value={form.time}
+                    onChange={(e) => setForm({ ...form, time: e.target.value })}
+                    className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
             <div>
               <label className="mb-1 block text-xs font-semibold text-brand-navy">
-                Experience (years)
+                Upload your resume (PDF)
               </label>
               <input
-                type="number"
-                value={form.experience}
-                onChange={(e) => setForm({ ...form, experience: e.target.value })}
-                className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="block w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy file:mr-4 file:rounded-xl file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-hover"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-brand-navy">
-                Education
-              </label>
-              <input
-                value={form.education}
-                onChange={(e) => setForm({ ...form, education: e.target.value })}
-                className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-brand-navy">
-                Budget ($)
-              </label>
-              <input
-                type="number"
-                value={form.budget}
-                onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-semibold text-brand-navy">
-                Time (months)
-              </label>
-              <input
-                type="number"
-                value={form.time}
-                onChange={(e) => setForm({ ...form, time: e.target.value })}
-                className="w-full rounded-xl border border-brand-border bg-[var(--input-bg)] px-3 py-2.5 text-sm text-brand-navy focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              />
-            </div>
-          </div>
+          )}
         </div>
 
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleAnalyze}
-          disabled={analyzing}
+          disabled={analyzing || !canSubmit}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-bold text-white shadow-warm-md transition hover:bg-primary-hover disabled:opacity-70"
         >
           {analyzing ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" /> Analyzing...
             </>
+          ) : mode === 'resume' ? (
+            <>
+              <Upload className="h-4 w-4" /> Upload & Analyze
+            </>
           ) : (
-            'Find My Best Path'
+            <>
+              Find My Best Path <ArrowRight className="h-4 w-4" />
+            </>
           )}
         </motion.button>
       </GlassPanel>
@@ -191,8 +256,8 @@ export function EmployeeWorkspace() {
               </div>
               <p className="text-lg font-semibold text-brand-navy">Ready for Analysis</p>
               <p className="mt-2 max-w-sm text-sm text-brand-muted">
-                Enter your profile on the left to trigger AI skill gap analysis
-                and MCTS trajectory search.
+                Enter your profile or upload a resume to trigger AI skill gap
+                analysis and MCTS trajectory search.
               </p>
             </motion.div>
           )}
@@ -247,10 +312,7 @@ export function EmployeeWorkspace() {
                   label="Gap Score"
                   value={`${((result.gap_score ?? 0) * 100).toFixed(1)}%`}
                 />
-                <IntelligenceMetric
-                  label="Missing"
-                  value={result.num_missing ?? 0}
-                />
+                <IntelligenceMetric label="Missing" value={result.num_missing ?? 0} />
               </div>
 
               {result.roadmap && result.roadmap.length > 0 && (
@@ -268,8 +330,8 @@ export function EmployeeWorkspace() {
                         key={i}
                         className="relative pl-8"
                       >
-                        <div className="absolute left-0 top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-primary shadow-[0_0_8px_#F97316]" />
-                        <div className="rounded-xl border border-brand-border bg-white/70 p-3 shadow-warm-sm">
+                        <div className="absolute left-0 top-1 h-3.5 w-3.5 rounded-full border-2 border-[var(--background)] bg-primary shadow-[0_0_8px_#F97316]" />
+                        <div className="rounded-xl border border-brand-border bg-[var(--panel-bg)] p-3 shadow-warm-sm">
                           <p className="text-sm font-medium text-brand-navy">{step}</p>
                         </div>
                       </motion.div>
@@ -302,6 +364,15 @@ export function EmployeeWorkspace() {
                   <h3 className="mb-2 text-lg font-bold text-white">Executive Explanation</h3>
                   <p className="text-sm leading-relaxed text-white/90">{result.llm.summary}</p>
                 </GlassPanel>
+              )}
+
+              {userId && apiBase && (
+                <div className="rounded-2xl border-2 border-brand-border bg-[var(--panel-bg)] p-6">
+                  <h3 className="mb-4 text-lg font-semibold text-brand-navy">
+                    Your learning dashboard
+                  </h3>
+                  <UserDashboard userId={userId} apiBase={apiBase} />
+                </div>
               )}
             </motion.div>
           )}

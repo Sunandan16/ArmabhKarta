@@ -77,7 +77,7 @@ export function IntelligenceOrb() {
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-8 right-8 rounded-xl border border-brand-border bg-white/80 px-3 py-1.5 shadow-warm-sm backdrop-blur-md"
+        className="absolute top-8 right-8 rounded-xl border border-brand-border bg-[var(--panel-bg)] px-3 py-1.5 shadow-warm-sm backdrop-blur-md"
       >
         <p className="flex items-center text-[10px] font-bold uppercase tracking-wider text-brand-navy">
           <span className="mr-2 h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
@@ -88,7 +88,7 @@ export function IntelligenceOrb() {
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute bottom-10 left-6 rounded-xl border border-brand-border bg-white/80 px-3 py-1.5 shadow-warm-sm backdrop-blur-md"
+        className="absolute bottom-10 left-6 rounded-xl border border-brand-border bg-[var(--panel-bg)] px-3 py-1.5 shadow-warm-sm backdrop-blur-md"
       >
         <p className="flex items-center text-[10px] font-bold uppercase tracking-wider text-primary">
           <span className="mr-2 h-1.5 w-1.5 rounded-full bg-brand-navy" />

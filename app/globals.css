@@ -25,6 +25,29 @@
     0 4px 6px -2px rgba(249, 115, 22, 0.05);
 }
 
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --panel-bg: rgba(15, 23, 42, 0.72);
+  --panel-border: #334155;
+  --input-bg: rgba(30, 41, 59, 0.6);
+
+  --color-brand-primary: #fb923c;
+  --color-brand-light: #fdba74;
+  --color-brand-soft: #1e293b;
+  --color-brand-cream: #020617;
+  --color-brand-white: #0f172a;
+  --color-brand-navy: #f8fafc;
+  --color-brand-muted: #94a3b8;
+  --color-brand-border: #334155;
+
+  --shadow-warm-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-warm-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-warm-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
 html {
   scroll-behavior: smooth;
 }

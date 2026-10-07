@@ -49,7 +49,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="group rounded-3xl border border-brand-border bg-white/80 p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:border-primary-light hover:shadow-warm-lg">
+    <div className="group rounded-3xl border border-brand-border bg-[var(--panel-bg)] p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:border-primary-light hover:shadow-warm-lg">
       <div className="mb-5 inline-flex rounded-2xl bg-gradient-to-br from-primary to-secondary p-3.5 text-white shadow-orange-200 transition group-hover:scale-105">
         <Icon className="h-6 w-6" />
       </div>

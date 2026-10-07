@@ -19,21 +19,21 @@ export function CompanyWorkspace() {
         </div>
 
         <div className="space-y-3">
-          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-white/60 p-4">
+          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-[var(--panel-bg)] p-4">
             <Users className="mt-0.5 h-5 w-5 text-primary" />
             <div>
               <p className="text-sm font-semibold text-brand-navy">Upload your roster</p>
               <p className="text-xs text-brand-muted">CSV or Excel of current employees.</p>
             </div>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-white/60 p-4">
+          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-[var(--panel-bg)] p-4">
             <TrendingUp className="mt-0.5 h-5 w-5 text-primary" />
             <div>
               <p className="text-sm font-semibold text-brand-navy">Add candidates</p>
               <p className="text-xs text-brand-muted">Auto-generated or manual external hires.</p>
             </div>
           </div>
-          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-white/60 p-4">
+          <div className="flex items-start gap-3 rounded-xl border border-brand-border bg-[var(--panel-bg)] p-4">
             <DollarSign className="mt-0.5 h-5 w-5 text-primary" />
             <div>
               <p className="text-sm font-semibold text-brand-navy">Run AI plan</p>

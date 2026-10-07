@@ -51,7 +51,7 @@ export function Roles() {
           {roles.map((role) => (
             <div
               key={role.id}
-              className="flex flex-col rounded-3xl border border-brand-border bg-white/80 p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-warm-lg"
+              className="flex flex-col rounded-3xl border border-brand-border bg-[var(--panel-bg)] p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-warm-lg"
             >
               <div className="mb-4 flex items-start justify-between">
                 <h3 className="text-2xl font-bold text-brand-navy">{role.name}</h3>

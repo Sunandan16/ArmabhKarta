@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
+import { ThemeProvider } from '@/components/shared/ThemeProvider';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -17,10 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased">
-        <Header />
-        {children}
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="bg-[var(--background)] text-[var(--foreground)] font-sans antialiased transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Header />
+          {children}
+          <ThemeToggle />
+        </ThemeProvider>
       </body>
     </html>
   );

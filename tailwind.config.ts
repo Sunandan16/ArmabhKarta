@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,12 +10,12 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#F97316',
-          hover: '#EA580C',
-          light: '#FED7AA',
+          DEFAULT: 'var(--color-brand-primary)',
+          hover: 'var(--color-brand-light)',
+          light: 'var(--color-brand-light)',
         },
-        secondary: '#FB923C',
-        surface: '#FFF7ED',
+        secondary: 'var(--color-brand-light)',
+        surface: 'var(--color-brand-soft)',
         muted: '#6B7280',
         success: '#22C55E',
         warning: '#EAB308',

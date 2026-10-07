@@ -33,7 +33,7 @@ function TechCard({
   items: string[];
 }) {
   return (
-    <div className="rounded-3xl border border-brand-border bg-white/80 p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-warm-lg">
+    <div className="rounded-3xl border border-brand-border bg-[var(--panel-bg)] p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-warm-lg">
       <div className="mb-5 inline-flex rounded-2xl bg-surface p-3.5 text-primary">
         <Icon className="h-7 w-7" />
       </div>
@@ -54,7 +54,7 @@ function TechCard({
 
 export function TechStack() {
   return (
-    <section id="tech-stack" className="bg-white px-4 py-24 md:px-6">
+    <section id="tech-stack" className="bg-[var(--background)] px-4 py-24 md:px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-14 text-center">
           <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
