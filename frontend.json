@@ -1,0 +1,354 @@
+{
+  "$schema": "https://schema.frontend-cli.dev/v1.json",
+  "project": {
+    "name": "SkillPilot",
+    "title": "SkillPilot Engine",
+    "tagline": "Predict your next career move with AI-powered skill intelligence",
+    "description": "SkillPilot analyzes your skills, identifies gaps against real market roles, predicts salary-hike and success potential, and generates a personalized learning roadmap.",
+    "domain": "workforce-ai",
+    "language": "en"
+  },
+  "theme": {
+    "name": "white-orange",
+    "colors": {
+      "background": "#FFFFFF",
+      "surface": "#FFF7ED",
+      "primary": "#F97316",
+      "primaryHover": "#EA580C",
+      "primaryLight": "#FED7AA",
+      "secondary": "#FB923C",
+      "text": "#1F2937",
+      "textMuted": "#6B7280",
+      "textOnPrimary": "#FFFFFF",
+      "border": "#FED7AA",
+      "success": "#22C55E",
+      "warning": "#EAB308",
+      "error": "#EF4444"
+    },
+    "font": {
+      "heading": "Inter",
+      "body": "Inter"
+    },
+    "style": {
+      "borderRadius": "0.75rem",
+      "buttonStyle": "rounded",
+      "cardShadow": "0 4px 6px -1px rgba(249, 115, 22, 0.1), 0 2px 4px -1px rgba(249, 115, 22, 0.06)",
+      "spacing": "relaxed"
+    }
+  },
+  "layout": {
+    "singlePage": true,
+    "header": {
+      "sticky": true,
+      "logoText": "SkillPilot",
+      "navItems": [
+        { "label": "Demo", "href": "#demo" },
+        { "label": "How it works", "href": "#how-it-works" },
+        { "label": "Results", "href": "#results" }
+      ],
+      "cta": {
+        "label": "Try Demo",
+        "href": "#demo"
+      }
+    },
+    "footer": {
+      "showCopyright": true,
+      "text": "SkillPilot — Built with Python, scikit-learn, XGBoost, and FastAPI. Deployed on Vercel.",
+      "links": [
+        { "label": "GitHub", "href": "https://github.com" }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "name": "home",
+      "path": "/",
+      "meta": {
+        "title": "SkillPilot | AI Skill Gap Analyzer",
+        "description": "Analyze your skills, discover role gaps, and get a personalized career roadmap with SkillPilot."
+      },
+      "sections": [
+        {
+          "id": "hero",
+          "type": "hero",
+          "title": "Know where you stand. Close the gap. Get hired.",
+          "subtitle": "SkillPilot matches your skills against real data roles, predicts your salary-hike and success potential, and builds a step-by-step roadmap.",
+          "ctaPrimary": {
+            "label": "Analyze My Skills",
+            "href": "#demo"
+          },
+          "ctaSecondary": {
+            "label": "See How It Works",
+            "href": "#how-it-works"
+          },
+          "badge": "AI-Powered Workforce Intelligence"
+        },
+        {
+          "id": "features",
+          "type": "features-grid",
+          "title": "What SkillPilot does",
+          "subtitle": "A complete pipeline from raw skills to actionable career guidance.",
+          "columns": 3,
+          "features": [
+            {
+              "icon": "Search",
+              "title": "Skill Extraction",
+              "description": "Paste your background in plain text. SkillPilot extracts and normalizes your skills automatically."
+            },
+            {
+              "icon": "Target",
+              "title": "Gap Analysis",
+              "description": "Compare your skills against market-driven role profiles for Data Scientist, Analyst, Engineer, and ML Engineer."
+            },
+            {
+              "icon": "TrendingUp",
+              "title": "Salary & Success Predictions",
+              "description": "Trained classifiers predict salary-hike potential and career success probability."
+            },
+            {
+              "icon": "Map",
+              "title": "Personalized Roadmap",
+              "description": "Get a phased learning plan with the top skills you need to reach your target role."
+            },
+            {
+              "icon": "Database",
+              "title": "Built on Real Data",
+              "description": "Role-skill matrices derived from thousands of real job postings and standardized outcomes."
+            },
+            {
+              "icon": "Zap",
+              "title": "Fast & Lightweight",
+              "description": "No heavy cloud setup needed. Models run locally and respond in milliseconds."
+            }
+          ]
+        },
+        {
+          "id": "demo",
+          "type": "interactive-demo",
+          "title": "Try SkillPilot",
+          "subtitle": "Enter your background, choose a target role, and see your skill gap analysis instantly.",
+          "apiEndpoint": "${NEXT_PUBLIC_API_URL}/analyze",
+          "method": "POST",
+          "form": {
+            "fields": [
+              {
+                "name": "text",
+                "type": "textarea",
+                "label": "Describe your background",
+                "placeholder": "e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau.",
+                "required": true,
+                "rows": 4
+              },
+              {
+                "name": "role",
+                "type": "select",
+                "label": "Target role",
+                "required": true,
+                "options": [
+                  { "value": "data_scientist", "label": "Data Scientist" },
+                  { "value": "data_analyst", "label": "Data Analyst" },
+                  { "value": "data_engineer", "label": "Data Engineer" },
+                  { "value": "ml_engineer", "label": "ML Engineer" }
+                ]
+              }
+            ],
+            "submitLabel": "Analyze Skills",
+            "loadingLabel": "Analyzing..."
+          },
+          "resultCards": [
+            { "label": "Coverage", "key": "coverage", "format": "percentage" },
+            { "label": "Gap Score", "key": "gap_score", "format": "percentage" },
+            { "label": "Missing Skills", "key": "num_missing", "format": "number" },
+            { "label": "Salary Hike", "key": "predictions.salary_hike.label", "format": "badge" },
+            { "label": "Success", "key": "predictions.success.label", "format": "badge" }
+          ],
+          "fallbackMessage": "Make sure your local FastAPI server is running and ngrok is active."
+        },
+        {
+          "id": "how-it-works",
+          "type": "steps",
+          "title": "How it works",
+          "subtitle": "From text to roadmap in four simple steps.",
+          "steps": [
+            {
+              "number": 1,
+              "title": "Describe yourself",
+              "description": "Enter your skills, experience, or a short bio in natural language."
+            },
+            {
+              "number": 2,
+              "title": "Normalize & map",
+              "description": "SkillPilot cleans your input, resolves aliases, and maps skills to a canonical dictionary with 98.4% recovery rate."
+            },
+            {
+              "number": 3,
+              "title": "Predict & compare",
+              "description": "Your mapped skills are compared to role requirements and fed into trained classifiers."
+            },
+            {
+              "number": 4,
+              "title": "Get your roadmap",
+              "description": "Receive a ranked list of missing skills and a phased learning plan."
+            }
+          ]
+        },
+        {
+          "id": "results",
+          "type": "stats-and-chart",
+          "title": "Model Performance",
+          "subtitle": "SkillPilot is built on validated behavioral models trained with repeated stratified cross-validation.",
+          "stats": [
+            {
+              "label": "Skill Recovery Rate",
+              "value": "98.41%",
+              "description": "78,677 of 78,933 skill tokens successfully normalized"
+            },
+            {
+              "label": "JDS Salary-Hike Accuracy",
+              "value": "86.32%",
+              "description": "Best model: Logistic Regression (AUC 0.9055)"
+            },
+            {
+              "label": "SDS Success Accuracy",
+              "value": "95.66%",
+              "description": "Best model: XGBoost (AUC 0.9938)"
+            },
+            {
+              "label": "Self-Label Validation",
+              "value": "92.31%",
+              "description": "12 of 13 manual samples correctly classified"
+            }
+          ],
+          "chart": {
+            "type": "bar",
+            "title": "Model accuracy comparison",
+            "data": [
+              { "name": "JDS Logistic Regression", "value": 86.32 },
+              { "name": "JDS Random Forest", "value": 82.80 },
+              { "name": "JDS XGBoost", "value": 81.94 },
+              { "name": "SDS Logistic Regression", "value": 92.86 },
+              { "name": "SDS Random Forest", "value": 95.47 },
+              { "name": "SDS XGBoost", "value": 95.66 }
+            ]
+          }
+        },
+        {
+          "id": "roles",
+          "type": "role-showcase",
+          "title": "Supported roles",
+          "subtitle": "Market-driven skill profiles for four high-demand data careers.",
+          "roles": [
+            {
+              "id": "data_scientist",
+              "name": "Data Scientist",
+              "postings": 902,
+              "medianSalary": "16.6 LPA",
+              "topSkills": ["machine learning", "data science", "python", "r", "deep learning"]
+            },
+            {
+              "id": "data_analyst",
+              "name": "Data Analyst",
+              "postings": 4195,
+              "medianSalary": "8.6 LPA",
+              "topSkills": ["sql", "analytics", "r", "business analysis", "sas"]
+            },
+            {
+              "id": "data_engineer",
+              "name": "Data Engineer",
+              "postings": 511,
+              "medianSalary": "14.3 LPA",
+              "topSkills": ["hadoop", "sql", "spark", "hive", "python"]
+            },
+            {
+              "id": "ml_engineer",
+              "name": "ML Engineer",
+              "postings": 144,
+              "medianSalary": "9.1 LPA",
+              "topSkills": ["machine learning", "python", "java", "c", "r"]
+            }
+          ]
+        },
+        {
+          "id": "tech-stack",
+          "type": "tech-stack",
+          "title": "Tech Stack",
+          "subtitle": "Built with modern Python ML tools and served through a clean FastAPI + Vercel architecture.",
+          "categories": [
+            {
+              "title": "Backend & ML",
+              "items": ["Python 3.12", "FastAPI", "scikit-learn", "XGBoost", "Pandas", "NumPy"]
+            },
+            {
+              "title": "Data & Intelligence",
+              "items": ["Role-Skill Matrix", "Skill Dictionary", "NVIDIA NIM LLM", "Outcome Classifiers"]
+            },
+            {
+              "title": "Frontend & Deploy",
+              "items": ["Next.js", "React", "Vercel", "ngrok"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "api": {
+    "baseUrl": "${NEXT_PUBLIC_API_URL}",
+    "provider": "fastapi-local",
+    "tunnel": "ngrok",
+    "endpoints": [
+      {
+        "name": "analyze",
+        "path": "/analyze",
+        "method": "POST",
+        "description": "Main skill-gap analyzer and predictor",
+        "requestBody": {
+          "text": "string",
+          "role": "string"
+        },
+        "responseFields": [
+          "current_skills",
+          "recommended_skills",
+          "coverage",
+          "gap_score",
+          "predictions.salary_hike",
+          "predictions.success",
+          "roadmap"
+        ]
+      },
+      {
+        "name": "health",
+        "path": "/health",
+        "method": "GET",
+        "description": "Health check"
+      },
+      {
+        "name": "roles",
+        "path": "/roles",
+        "method": "GET",
+        "description": "List available target roles"
+      }
+    ]
+  },
+  "deployment": {
+    "platform": "vercel",
+    "framework": "nextjs",
+    "buildCommand": "next build",
+    "outputDirectory": "out",
+    "environmentVariables": [
+      {
+        "name": "NEXT_PUBLIC_API_URL",
+        "description": "Your ngrok or Cloudflare Tunnel public URL, e.g. https://abc123.ngrok-free.app",
+        "required": true
+      }
+    ],
+    "instructions": [
+      "Create a new GitHub repo for the website.",
+      "Generate the frontend code from this JSON using your CLI.",
+      "Push the generated code to the GitHub repo.",
+      "Import the repo into Vercel and deploy.",
+      "Set NEXT_PUBLIC_API_URL to your active ngrok URL in Vercel project settings.",
+      "Run the FastAPI backend locally and start ngrok.",
+      "Redeploy Vercel if you change the ngrok URL."
+    ]
+  }
+}
