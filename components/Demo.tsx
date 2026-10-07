@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import {
   Loader2,
   AlertCircle,
   CheckCircle2,
-  RefreshCw,
-  ArrowRight,
   Lightbulb,
+  ArrowRight,
+  Upload,
 } from 'lucide-react';
+import { UserDashboard } from './UserDashboard';
 
 const roles = [
   { value: 'data_scientist', label: 'Data Scientist' },
@@ -28,6 +29,11 @@ interface AnalysisResult {
   recommended_skills?: string[];
   current_skills?: string[];
   roadmap?: string[];
+  llm?: {
+    summary?: string;
+    key_insights?: string[];
+    [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 
@@ -66,11 +72,22 @@ const resultCards = [
 export function Demo() {
   const [text, setText] = useState('');
   const [role, setRole] = useState('data_scientist');
+  const [file, setFile] = useState<File | null>(null);
+  const [mode, setMode] = useState<'text' | 'resume'>('text');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const apiBase = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const saved =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('skillpilot_user_id')
+        : null;
+    if (saved) setUserId(saved);
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -87,23 +104,51 @@ export function Demo() {
     }
 
     try {
-      const res = await fetch(`${apiBase}/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: JSON.stringify({ text, role }),
-      });
+      let data: AnalysisResult & { user_id?: string };
+      const headers: Record<string, string> = {
+        'ngrok-skip-browser-warning': 'true',
+      };
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(
-          data.detail || `Server returned ${res.status}. Please try again.`
-        );
+      if (mode === 'resume') {
+        if (!file) {
+          setLoading(false);
+          setError('Please upload a PDF resume.');
+          return;
+        }
+        const form = new FormData();
+        form.append('file', file);
+        form.append('role', role);
+        const res = await fetch(`${apiBase}/upload-resume`, {
+          method: 'POST',
+          headers,
+          body: form,
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `Server returned ${res.status}`);
+        }
+        const uploadData = await res.json();
+        data = uploadData.analysis;
+        if (uploadData.user_id) {
+          setUserId(uploadData.user_id);
+          localStorage.setItem('skillpilot_user_id', uploadData.user_id);
+        }
+      } else {
+        const res = await fetch(`${apiBase}/analyze`, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text, role }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `Server returned ${res.status}`);
+        }
+        data = await res.json();
       }
 
-      const data = (await res.json()) as AnalysisResult;
       setResult(data);
     } catch (err) {
       setError(
@@ -129,8 +174,8 @@ export function Demo() {
               Try SkillPilot
             </h2>
             <p className="mb-8 text-muted">
-              Enter your background, choose a target role, and see your skill
-              gap analysis instantly.
+              Enter your background or upload your resume, choose a target role,
+              and see your skill gap analysis.
             </p>
             <div className="space-y-4 rounded-3xl border border-primary-light bg-white p-6 shadow-card">
               <div className="flex items-center gap-3">
@@ -138,7 +183,7 @@ export function Demo() {
                   1
                 </div>
                 <p className="text-sm font-medium text-gray-700">
-                  Paste your skills and experience
+                  Type your background or upload a resume
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -154,7 +199,7 @@ export function Demo() {
                   3
                 </div>
                 <p className="text-sm font-medium text-gray-700">
-                  Get predictions + a learning roadmap
+                  Get predictions, insights, and a learning roadmap
                 </p>
               </div>
             </div>
@@ -163,24 +208,69 @@ export function Demo() {
           {/* Right form */}
           <div className="lg:col-span-3">
             <div className="rounded-3xl border border-primary-light bg-white p-6 shadow-xl shadow-orange-100 md:p-8">
+              {/* Mode toggle */}
+              <div className="mb-6 flex justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMode('text')}
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
+                    mode === 'text'
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-surface text-gray-700 hover:bg-primary-light'
+                  }`}
+                >
+                  Type Background
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('resume')}
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition ${
+                    mode === 'resume'
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-surface text-gray-700 hover:bg-primary-light'
+                  }`}
+                >
+                  Upload Resume
+                </button>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="background"
-                    className="mb-2 block text-sm font-semibold text-gray-900"
-                  >
-                    Describe your background
-                  </label>
-                  <textarea
-                    id="background"
-                    rows={5}
-                    required
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau."
-                    className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
-                  />
-                </div>
+                {mode === 'text' ? (
+                  <div>
+                    <label
+                      htmlFor="background"
+                      className="mb-2 block text-sm font-semibold text-gray-900"
+                    >
+                      Describe your background
+                    </label>
+                    <textarea
+                      id="background"
+                      rows={5}
+                      required={mode === 'text'}
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      placeholder="e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau."
+                      className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 transition focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-light"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label
+                      htmlFor="resume"
+                      className="mb-2 block text-sm font-semibold text-gray-900"
+                    >
+                      Upload your resume (PDF)
+                    </label>
+                    <input
+                      id="resume"
+                      type="file"
+                      accept=".pdf"
+                      required={mode === 'resume'}
+                      onChange={(e) => setFile(e.target.files?.[0] || null)}
+                      className="block w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 file:mr-4 file:rounded-xl file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-hover"
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label
@@ -206,13 +296,18 @@ export function Demo() {
 
                 <button
                   type="submit"
-                  disabled={loading || !text.trim()}
+                  disabled={loading || (mode === 'text' ? !text.trim() : !file)}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
                       Analyzing...
+                    </>
+                  ) : mode === 'resume' ? (
+                    <>
+                      <Upload className="h-5 w-5" />
+                      Upload & Analyze
                     </>
                   ) : (
                     <>
@@ -281,11 +376,37 @@ export function Demo() {
                     })}
                   </div>
 
+                  {result.llm?.summary && (
+                    <div className="rounded-2xl border border-primary-light bg-white p-6">
+                      <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                        <Lightbulb className="h-5 w-5 text-primary" />
+                        Summary
+                      </h3>
+                      <p className="leading-relaxed text-gray-700">
+                        {result.llm.summary}
+                      </p>
+                    </div>
+                  )}
+
+                  {Array.isArray(result.llm?.key_insights) &&
+                    result.llm.key_insights.length > 0 && (
+                      <div className="rounded-2xl border border-primary-light bg-white p-6">
+                        <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                          Key insights
+                        </h3>
+                        <ul className="list-inside list-disc space-y-1 text-gray-700">
+                          {result.llm.key_insights.map((insight, i) => (
+                            <li key={i}>{insight}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
                   {Array.isArray(result.recommended_skills) &&
                     result.recommended_skills.length > 0 && (
                       <div className="rounded-2xl border border-primary-light bg-white p-6">
                         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-                          <Lightbulb className="h-5 w-5 text-primary" />
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
                           Recommended skills
                         </h3>
                         <div className="flex flex-wrap gap-2">
@@ -320,6 +441,15 @@ export function Demo() {
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+
+                  {userId && apiBase && (
+                    <div className="rounded-2xl border-2 border-primary-light bg-white p-6">
+                      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+                        Your learning dashboard
+                      </h3>
+                      <UserDashboard userId={userId} apiBase={apiBase} />
                     </div>
                   )}
                 </div>
