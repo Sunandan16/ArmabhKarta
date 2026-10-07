@@ -45,7 +45,7 @@ export default function LandingPage() {
                 setMode('employee');
                 document.getElementById('workspace-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-full bg-brand-navy px-8 py-3.5 font-semibold text-white shadow-warm-lg transition hover:-translate-y-0.5 hover:opacity-90 active:translate-y-0"
+              className="rounded-full bg-gray-900 px-8 py-3.5 font-semibold text-white shadow-warm-lg transition hover:-translate-y-0.5 hover:bg-gray-800 active:translate-y-0"
             >
               Explore Employee Mode
             </button>
@@ -54,7 +54,7 @@ export default function LandingPage() {
                 setMode('company');
                 document.getElementById('workspace-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-full border border-brand-border bg-white px-8 py-3.5 font-semibold text-brand-navy shadow-warm-sm transition hover:-translate-y-0.5 hover:bg-surface active:translate-y-0"
+              className="rounded-full border border-gray-200 bg-white px-8 py-3.5 font-semibold text-gray-900 shadow-warm-sm transition hover:-translate-y-0.5 hover:bg-gray-100 active:translate-y-0"
             >
               Explore Company Mode
             </button>

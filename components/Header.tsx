@@ -60,8 +60,8 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <a
-            href="#demo"
-            className="hidden rounded-full bg-brand-navy px-5 py-2 text-sm font-semibold text-white shadow-warm-md transition hover:opacity-90 sm:inline-flex"
+            href="/demo"
+            className="hidden rounded-full bg-gray-900 px-5 py-2 text-sm font-semibold text-white shadow-warm-md transition hover:bg-gray-800 sm:inline-flex"
           >
             Try Demo
           </a>
@@ -87,9 +87,9 @@ export function Header() {
               />
             ))}
             <a
-              href="#demo"
+              href="/demo"
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center rounded-full bg-brand-navy px-5 py-2.5 text-sm font-semibold text-white"
+              className="mt-2 inline-flex items-center justify-center rounded-full bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white"
             >
               Try Demo
             </a>

@@ -46,7 +46,7 @@ export function CompanyWorkspace() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-navy py-3 font-bold text-white shadow-warm-md transition hover:opacity-90"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3 font-bold text-white shadow-warm-md transition hover:bg-gray-800"
           >
             Open Workforce Planner
             <ArrowRight className="h-4 w-4" />
