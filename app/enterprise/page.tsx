@@ -57,7 +57,6 @@ export default function EnterprisePage() {
         throw new Error(planData.detail || `Server returned ${planRes.status}`);
       }
 
-      // Load the report to get worth-it analysis and full department state
       const reportRes = await fetch(
         `${apiBase}/enterprise/departments/${department.department_id}/report`,
         {
@@ -86,12 +85,11 @@ export default function EnterprisePage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
       <section className="bg-gradient-to-br from-orange-50 via-white to-white px-4 pb-16 pt-12 md:px-6 md:pt-20">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <Link
             href="/"
-            className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-muted transition hover:text-primary"
+            className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-brand-muted transition hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to SkillPilot
@@ -100,14 +98,14 @@ export default function EnterprisePage() {
             <div className="inline-flex rounded-2xl bg-surface p-3 text-primary">
               <Briefcase className="h-7 w-7" />
             </div>
-            <span className="rounded-full border border-primary-light bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+            <span className="rounded-full border border-brand-border bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
               Enterprise
             </span>
           </div>
-          <h1 className="mt-5 text-4xl font-extrabold leading-tight text-gray-900 md:text-5xl">
+          <h1 className="mt-5 text-4xl font-extrabold leading-tight text-brand-navy md:text-5xl">
             Enterprise Workforce Planner
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-muted">
+          <p className="mt-4 max-w-2xl text-lg text-brand-muted">
             Build vs. Buy workforce optimization for data teams. Create a
             department, upload your roster, add candidates, and let AI decide the
             optimal mix of upskilling and hiring.
@@ -116,8 +114,7 @@ export default function EnterprisePage() {
       </section>
 
       <section className="px-4 pb-24 md:px-6">
-        <div className="mx-auto max-w-6xl space-y-8">
-          {/* Messages */}
+        <div className="mx-auto max-w-7xl space-y-8">
           {error && (
             <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700">
               <p className="font-semibold">Error</p>
@@ -125,7 +122,7 @@ export default function EnterprisePage() {
             </div>
           )}
           {info && (
-            <div className="rounded-2xl border border-primary-light bg-surface p-4 text-primary">
+            <div className="rounded-2xl border border-brand-border bg-surface p-4 text-primary">
               <p className="text-sm font-medium">{info}</p>
             </div>
           )}
@@ -139,7 +136,6 @@ export default function EnterprisePage() {
             </div>
           )}
 
-          {/* Department setup */}
           {!department ? (
             apiBase && (
               <DepartmentForm
@@ -149,13 +145,13 @@ export default function EnterprisePage() {
               />
             )
           ) : (
-            <div className="rounded-3xl border border-primary-light bg-surface p-6 shadow-card md:p-8">
+            <div className="rounded-3xl border border-brand-border bg-white/80 p-6 shadow-warm-md backdrop-blur-sm md:p-8">
               <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-2xl font-bold text-brand-navy">
                     {department.name}
                   </h2>
-                  <p className="text-muted">
+                  <p className="text-brand-muted">
                     {department.target_role.replace(/_/g, ' ')} · Budget{' '}
                     {department.budget} LPA · {department.time_horizon_months}{' '}
                     months
@@ -169,7 +165,7 @@ export default function EnterprisePage() {
                     setWorthIt(null);
                     clearMessages();
                   }}
-                  className="rounded-full border border-primary-light bg-white px-4 py-2 text-sm font-semibold text-primary transition hover:bg-white"
+                  className="rounded-full border border-brand-border bg-white px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface"
                 >
                   New department
                 </button>
@@ -195,13 +191,13 @@ export default function EnterprisePage() {
                 />
               </div>
 
-              <div className="rounded-3xl border border-primary-light bg-white p-6 shadow-card md:p-8">
+              <div className="rounded-3xl border border-brand-border bg-white/80 p-6 shadow-warm-md backdrop-blur-sm md:p-8">
                 <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-brand-navy">
                       Run workforce plan
                     </h2>
-                    <p className="text-sm text-muted">
+                    <p className="text-sm text-brand-muted">
                       {canRunPlan
                         ? 'Ready to generate the optimal build-vs-buy plan.'
                         : 'Upload at least one employee and add at least one candidate to run the plan.'}
@@ -211,7 +207,7 @@ export default function EnterprisePage() {
                     type="button"
                     onClick={runPlan}
                     disabled={!canRunPlan || planning}
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-semibold text-white shadow-warm-lg transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {planning ? (
                       <>

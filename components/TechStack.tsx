@@ -33,16 +33,16 @@ function TechCard({
   items: string[];
 }) {
   return (
-    <div className="rounded-3xl border border-gray-100 bg-white p-7 shadow-card transition hover:-translate-y-1 hover:shadow-lg">
+    <div className="rounded-3xl border border-brand-border bg-white/80 p-7 shadow-warm-md backdrop-blur-sm transition hover:-translate-y-1 hover:shadow-warm-lg">
       <div className="mb-5 inline-flex rounded-2xl bg-surface p-3.5 text-primary">
         <Icon className="h-7 w-7" />
       </div>
-      <h3 className="mb-4 text-xl font-semibold text-gray-900">{title}</h3>
+      <h3 className="mb-4 text-xl font-semibold text-brand-navy">{title}</h3>
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <span
             key={item}
-            className="inline-flex rounded-lg border border-primary-light bg-surface px-3 py-1.5 text-sm font-medium text-gray-700"
+            className="inline-flex rounded-lg border border-brand-border bg-surface px-3 py-1.5 text-sm font-medium text-brand-navy"
           >
             {item}
           </span>
@@ -60,10 +60,10 @@ export function TechStack() {
           <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
             Stack
           </span>
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+          <h2 className="mb-4 text-3xl font-bold text-brand-navy md:text-4xl">
             Tech Stack
           </h2>
-          <p className="mx-auto max-w-2xl text-muted">
+          <p className="mx-auto max-w-2xl text-brand-muted">
             Built with modern Python ML tools and served through a clean FastAPI
             + Vercel architecture.
           </p>

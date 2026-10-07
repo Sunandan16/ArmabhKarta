@@ -33,28 +33,26 @@ export function HowItWorks() {
           <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
             Pipeline
           </span>
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+          <h2 className="mb-4 text-3xl font-bold text-brand-navy md:text-4xl">
             How it works
           </h2>
-          <p className="mx-auto max-w-2xl text-muted">
+          <p className="mx-auto max-w-2xl text-brand-muted">
             From text to roadmap in four simple steps.
           </p>
         </div>
 
         <div className="relative">
-          {/* Connecting line (desktop) */}
-          <div className="absolute left-0 top-8 hidden h-0.5 w-full bg-primary-light lg:block" />
-
+          <div className="absolute left-0 top-8 hidden h-0.5 w-full bg-brand-border lg:block" />
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
               <div key={step.number} className="relative text-center">
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-primary text-2xl font-bold text-white shadow-lg shadow-orange-200">
                   {step.number}
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                <h3 className="mb-2 text-lg font-semibold text-brand-navy">
                   {step.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted">
+                <p className="text-sm leading-relaxed text-brand-muted">
                   {step.description}
                 </p>
               </div>
