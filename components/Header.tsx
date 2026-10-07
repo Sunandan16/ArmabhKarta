@@ -10,7 +10,33 @@ const navItems = [
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Roles', href: '#roles' },
   { label: 'Tech stack', href: '#tech-stack' },
+  { label: 'Enterprise', href: '/enterprise' },
 ];
+
+function NavLink({
+  href,
+  label,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  onClick?: () => void;
+}) {
+  const className =
+    'text-sm font-medium text-gray-600 transition-colors hover:text-primary';
+  if (href.startsWith('/')) {
+    return (
+      <Link href={href} onClick={onClick} className={className}>
+        {label}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} onClick={onClick} className={className}>
+      {label}
+    </a>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -25,13 +51,7 @@ export function Header() {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 lg:flex">
           {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-gray-600 transition-colors hover:text-primary"
-            >
-              {item.label}
-            </a>
+            <NavLink key={item.href} href={item.href} label={item.label} />
           ))}
         </nav>
 
@@ -57,14 +77,12 @@ export function Header() {
         <div className="border-t border-primary-light bg-white px-4 py-4 lg:hidden">
           <nav className="flex flex-col gap-3">
             {navItems.map((item) => (
-              <a
+              <NavLink
                 key={item.href}
                 href={item.href}
+                label={item.label}
                 onClick={() => setOpen(false)}
-                className="text-base font-medium text-gray-700 transition-colors hover:text-primary"
-              >
-                {item.label}
-              </a>
+              />
             ))}
             <a
               href="#demo"
