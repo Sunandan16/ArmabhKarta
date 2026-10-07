@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { Loader2, AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react';
+import { useEffect, useState, FormEvent } from 'react';
+import { Loader2, AlertCircle, CheckCircle2, RefreshCw, Upload } from 'lucide-react';
+import { UserDashboard } from './UserDashboard';
 
 const roles = [
   { value: 'data_scientist', label: 'Data Scientist' },
@@ -64,11 +65,19 @@ const resultCards = [
 export function Demo() {
   const [text, setText] = useState('');
   const [role, setRole] = useState('data_scientist');
+  const [file, setFile] = useState<File | null>(null);
+  const [mode, setMode] = useState<'text' | 'resume'>('text');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const apiBase = process.env.NEXT_PUBLIC_API_URL;
+
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('skillpilot_user_id') : null;
+    if (saved) setUserId(saved);
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -78,37 +87,59 @@ export function Demo() {
 
     if (!apiBase) {
       setLoading(false);
-      setError(
-        'API URL is not configured. Set NEXT_PUBLIC_API_URL in your environment.'
-      );
+      setError('API URL is not configured. Set NEXT_PUBLIC_API_URL in your environment.');
       return;
     }
 
     try {
-      const res = await fetch(`${apiBase}/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-        },
-        body: JSON.stringify({ text, role }),
-      });
+      let data: AnalysisResult & { user_id?: string };
+      const headers: Record<string, string> = {
+        'ngrok-skip-browser-warning': 'true',
+      };
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(
-          data.detail || `Server returned ${res.status}. Please try again.`
-        );
+      if (mode === 'resume') {
+        if (!file) {
+          setLoading(false);
+          setError('Please upload a PDF resume.');
+          return;
+        }
+        const form = new FormData();
+        form.append('file', file);
+        form.append('role', role);
+        const res = await fetch(`${apiBase}/upload-resume`, {
+          method: 'POST',
+          headers,
+          body: form,
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `Server returned ${res.status}`);
+        }
+        const uploadData = await res.json();
+        data = uploadData.analysis;
+        if (uploadData.user_id) {
+          setUserId(uploadData.user_id);
+          localStorage.setItem('skillpilot_user_id', uploadData.user_id);
+        }
+      } else {
+        const res = await fetch(`${apiBase}/analyze`, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text, role }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `Server returned ${res.status}`);
+        }
+        data = await res.json();
       }
 
-      const data = (await res.json()) as AnalysisResult;
       setResult(data);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Unable to reach the backend. Make sure your local FastAPI server is running and ngrok is active.'
-      );
+      setError(err instanceof Error ? err.message : 'Unable to reach the backend.');
     } finally {
       setLoading(false);
     }
@@ -118,40 +149,76 @@ export function Demo() {
     <section id="demo" className="bg-white px-4 py-20 md:px-6">
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 text-center">
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 md:text-4xl">
-            Try SkillPilot
-          </h2>
+          <h2 className="mb-3 text-3xl font-bold text-gray-900 md:text-4xl">Try SkillPilot</h2>
           <p className="mx-auto max-w-2xl text-muted">
-            Enter your background, choose a target role, and see your skill gap
-            analysis instantly.
+            Enter your background or upload your resume, choose a target role, and see your skill gap analysis.
           </p>
         </div>
 
         <div className="rounded-2xl border border-primary-light bg-surface p-6 shadow-card md:p-8">
+          <div className="mb-6 flex justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setMode('text')}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === 'text'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Type Background
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('resume')}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === 'resume'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Upload Resume
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="background"
-                className="mb-2 block text-sm font-semibold text-gray-900"
-              >
-                Describe your background
-              </label>
-              <textarea
-                id="background"
-                rows={4}
-                required
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau."
-                className="w-full resize-none rounded-xl border border-primary-light bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-light"
-              />
-            </div>
+            {mode === 'text' ? (
+              <div>
+                <label
+                  htmlFor="background"
+                  className="mb-2 block text-sm font-semibold text-gray-900"
+                >
+                  Describe your background
+                </label>
+                <textarea
+                  id="background"
+                  rows={4}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="e.g. I know Python, SQL, machine learning, pandas, numpy, and Tableau."
+                  className="w-full resize-none rounded-xl border border-primary-light bg-white px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-light"
+                />
+              </div>
+            ) : (
+              <div>
+                <label
+                  htmlFor="resume"
+                  className="mb-2 block text-sm font-semibold text-gray-900"
+                >
+                  Upload your resume (PDF)
+                </label>
+                <input
+                  id="resume"
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="block w-full rounded-xl border border-primary-light bg-white px-4 py-3 text-sm text-gray-900 file:mr-4 file:rounded-lg file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-primary-hover"
+                />
+              </div>
+            )}
 
             <div>
-              <label
-                htmlFor="role"
-                className="mb-2 block text-sm font-semibold text-gray-900"
-              >
+              <label htmlFor="role" className="mb-2 block text-sm font-semibold text-gray-900">
                 Target role
               </label>
               <select
@@ -171,13 +238,18 @@ export function Demo() {
 
             <button
               type="submit"
-              disabled={loading || !text.trim()}
+              disabled={loading || (mode === 'text' ? !text.trim() : !file)}
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-base font-semibold text-white shadow-card transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
               {loading ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Analyzing...
+                </>
+              ) : mode === 'resume' ? (
+                <>
+                  <Upload className="h-5 w-5" />
+                  Upload & Analyze
                 </>
               ) : (
                 'Analyze Skills'
@@ -206,9 +278,7 @@ export function Demo() {
                       key={card.key}
                       className="rounded-xl border border-primary-light bg-white p-5 text-center shadow-sm"
                     >
-                      <p className="mb-1 text-sm font-medium text-muted">
-                        {card.label}
-                      </p>
+                      <p className="mb-1 text-sm font-medium text-muted">{card.label}</p>
                       {isBadge ? (
                         <span
                           className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-bold ${
@@ -230,25 +300,24 @@ export function Demo() {
                 })}
               </div>
 
-              {Array.isArray(result.recommended_skills) &&
-                result.recommended_skills.length > 0 && (
-                  <div className="rounded-xl border border-primary-light bg-white p-6">
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-                      <RefreshCw className="h-5 w-5 text-primary" />
-                      Recommended skills
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {result.recommended_skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="inline-flex items-center rounded-full bg-surface px-3 py-1 text-sm font-medium text-primary"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
+              {Array.isArray(result.recommended_skills) && result.recommended_skills.length > 0 && (
+                <div className="rounded-xl border border-primary-light bg-white p-6">
+                  <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                    <RefreshCw className="h-5 w-5 text-primary" />
+                    Recommended skills
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {result.recommended_skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="inline-flex items-center rounded-full bg-surface px-3 py-1 text-sm font-medium text-primary"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
 
               {Array.isArray(result.roadmap) && result.roadmap.length > 0 && (
                 <div className="rounded-xl border border-primary-light bg-white p-6">
@@ -258,10 +327,7 @@ export function Demo() {
                   </h3>
                   <ul className="space-y-2">
                     {result.roadmap.map((step, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-gray-700"
-                      >
+                      <li key={i} className="flex items-start gap-3 text-gray-700">
                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                           {i + 1}
                         </span>
@@ -274,28 +340,28 @@ export function Demo() {
 
               {result.llm?.summary && (
                 <div className="rounded-xl border border-primary-light bg-white p-6">
-                  <h3 className="mb-3 text-lg font-semibold text-gray-900">
-                    Summary
-                  </h3>
-                  <p className="leading-relaxed text-gray-700">
-                    {result.llm.summary}
-                  </p>
+                  <h3 className="mb-3 text-lg font-semibold text-gray-900">Summary</h3>
+                  <p className="leading-relaxed text-gray-700">{result.llm.summary}</p>
                 </div>
               )}
 
-              {Array.isArray(result.llm?.key_insights) &&
-                result.llm.key_insights.length > 0 && (
-                  <div className="rounded-xl border border-primary-light bg-white p-6">
-                    <h3 className="mb-3 text-lg font-semibold text-gray-900">
-                      Key insights
-                    </h3>
-                    <ul className="list-inside list-disc space-y-1 text-gray-700">
-                      {result.llm.key_insights.map((insight, i) => (
-                        <li key={i}>{insight}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              {Array.isArray(result.llm?.key_insights) && result.llm.key_insights.length > 0 && (
+                <div className="rounded-xl border border-primary-light bg-white p-6">
+                  <h3 className="mb-3 text-lg font-semibold text-gray-900">Key insights</h3>
+                  <ul className="list-inside list-disc space-y-1 text-gray-700">
+                    {result.llm.key_insights.map((insight, i) => (
+                      <li key={i}>{insight}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {userId && (
+                <div className="rounded-xl border-2 border-primary-light bg-white p-6">
+                  <h3 className="mb-4 text-lg font-semibold text-gray-900">Your learning dashboard</h3>
+                  <UserDashboard userId={userId} apiBase={apiBase || ''} />
+                </div>
+              )}
             </div>
           )}
         </div>
