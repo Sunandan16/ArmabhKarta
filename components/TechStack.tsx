@@ -33,29 +33,34 @@ function TechCard({
   items: string[];
 }) {
   return (
-    <div className="rounded-xl border border-primary-light bg-white p-6 shadow-card">
-      <div className="mb-4 inline-flex rounded-lg bg-surface p-3 text-primary">
-        <Icon className="h-6 w-6" />
+    <div className="rounded-3xl border border-gray-100 bg-white p-7 shadow-card transition hover:-translate-y-1 hover:shadow-lg">
+      <div className="mb-5 inline-flex rounded-2xl bg-surface p-3.5 text-primary">
+        <Icon className="h-7 w-7" />
       </div>
-      <h3 className="mb-3 text-lg font-semibold text-gray-900">{title}</h3>
-      <ul className="space-y-2">
+      <h3 className="mb-4 text-xl font-semibold text-gray-900">{title}</h3>
+      <div className="flex flex-wrap gap-2">
         {items.map((item) => (
-          <li key={item} className="flex items-center gap-2 text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          <span
+            key={item}
+            className="inline-flex rounded-lg border border-primary-light bg-surface px-3 py-1.5 text-sm font-medium text-gray-700"
+          >
             {item}
-          </li>
+          </span>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
 
 export function TechStack() {
   return (
-    <section id="tech-stack" className="bg-surface px-4 py-20 md:px-6">
+    <section id="tech-stack" className="bg-white px-4 py-24 md:px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 md:text-4xl">
+        <div className="mb-14 text-center">
+          <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
+            Stack
+          </span>
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
             Tech Stack
           </h2>
           <p className="mx-auto max-w-2xl text-muted">

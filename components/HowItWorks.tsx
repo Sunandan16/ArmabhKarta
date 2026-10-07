@@ -27,28 +27,39 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-white px-4 py-20 md:px-6">
+    <section id="how-it-works" className="bg-white px-4 py-24 md:px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold text-gray-900 md:text-4xl">
+        <div className="mb-16 text-center">
+          <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-wider text-primary">
+            Pipeline
+          </span>
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
             How it works
           </h2>
           <p className="mx-auto max-w-2xl text-muted">
             From text to roadmap in four simple steps.
           </p>
         </div>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step) => (
-            <div key={step.number} className="relative">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-white">
-                {step.number}
+
+        <div className="relative">
+          {/* Connecting line (desktop) */}
+          <div className="absolute left-0 top-8 hidden h-0.5 w-full bg-primary-light lg:block" />
+
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step) => (
+              <div key={step.number} className="relative text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-primary text-2xl font-bold text-white shadow-lg shadow-orange-200">
+                  {step.number}
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  {step.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted">
+                  {step.description}
+                </p>
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                {step.title}
-              </h3>
-              <p className="text-muted">{step.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

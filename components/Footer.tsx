@@ -1,22 +1,43 @@
-import { Github } from 'lucide-react';
+import { Github, ArrowRight } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="border-t border-primary-light bg-white px-4 py-10 md:px-6">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 md:flex-row">
-        <p className="text-center text-sm text-muted md:text-left">
-          SkillPilot — Built with Python, scikit-learn, XGBoost, and FastAPI.
-          Deployed on Vercel.
-        </p>
-        <a
-          href="https://github.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 transition hover:text-primary"
-        >
-          <Github className="h-4 w-4" />
-          GitHub
-        </a>
+    <footer className="border-t border-primary-light bg-surface px-4 py-12 md:px-6">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col items-center justify-between gap-6 rounded-3xl bg-primary p-8 text-center text-white shadow-lg shadow-orange-200 md:flex-row md:text-left">
+          <div>
+            <h3 className="mb-2 text-2xl font-bold">
+              Ready to close your skill gap?
+            </h3>
+            <p className="text-white/90">
+              Analyze your profile and get a personalized career roadmap in
+              seconds.
+            </p>
+          </div>
+          <a
+            href="#demo"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 font-semibold text-primary transition hover:bg-gray-50"
+          >
+            Try SkillPilot
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="text-sm text-muted">
+            SkillPilot — Built with Python, scikit-learn, XGBoost, and FastAPI.
+            Deployed on Vercel.
+          </p>
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 transition hover:text-primary"
+          >
+            <Github className="h-4 w-4" />
+            GitHub
+          </a>
+        </div>
       </div>
     </footer>
   );

@@ -2,7 +2,6 @@ import { Hero } from '@/components/Hero';
 import { Features } from '@/components/Features';
 import { Demo } from '@/components/Demo';
 import { HowItWorks } from '@/components/HowItWorks';
-import { ModelPerformance } from '@/components/ModelPerformance';
 import { Roles } from '@/components/Roles';
 import { TechStack } from '@/components/TechStack';
 import { Footer } from '@/components/Footer';
@@ -14,7 +13,6 @@ export default function Home() {
       <Features />
       <Demo />
       <HowItWorks />
-      <ModelPerformance />
       <Roles />
       <TechStack />
       <Footer />
